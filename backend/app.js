@@ -1,10 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const Post = require('./models/post');
 
 const app = express();
 
+mongoose.connect("mongodb+srv://ashwin:GBQORbI9ARJBEp1u@cluster0.kekn1.mongodb.net/MEAN-Project?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => {
+  console.log('Connected to Database!');
+})
+.catch(() => {
+  console.log('Connection to Database Failed!');
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -14,7 +26,11 @@ app.use((req, res, next) => {
 });
 
 app.post('/api/posts', (req, res, next) => {
-  const posts = req.body;
+  const posts = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });
+  posts.save();
   console.log(posts);
   res.status(201).json({
     message: 'Post Added Successfully!!!'
@@ -22,17 +38,14 @@ app.post('/api/posts', (req, res, next) => {
 });
 
 app.get('/api/posts', (req, res, next) => {
-  const posts = [
-    {id: 'PSTID001', title: 'First Post from server', content: 'First Post Content'},
-    {id: 'PSTID002', title: 'Second Post from server', content: 'Second Post Content'},
-    {id: 'PSTID003', title: 'Third Post from server', content: 'Third Post Content'},
-    {id: 'PSTID004', title: 'Fourth Post from server', content: 'Fourth Post Content'},
-    {id: 'PSTID005', title: 'Fifth Post from server', content: 'Fifth Post Content'}
-  ];
-  res.status(200).json({
-    message: 'Successfully fetched from Server',
-    posts: posts
+  const posts = [];
+  Post.find().then(documents => {
+    res.status(200).json({
+      message: 'Successfully fetched from Server',
+      posts: documents
+    });
   });
+
 });
 
 module.exports = app;
