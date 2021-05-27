@@ -1,0 +1,20 @@
+mat-form-field {
+  width: 100%;
+
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+.field-container {
+  display: inline-block;
+}
+
+input {
+  margin-left: 9px;
+}
+
+mat-card {
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}

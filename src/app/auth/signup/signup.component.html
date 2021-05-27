@@ -1,0 +1,22 @@
+<mat-card>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form (submit)="onSubmit(createForm)" #createForm="ngForm" *ngIf="!isLoading">
+    <mat-form-field>
+      <input matInput ngModel name="FirstName" type="text" placeholder="First name" #fname="ngModel" required >
+      <mat-error *ngIf="fname.invalid">Enter Valid Name*</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput ngModel name="LastName" type="text" placeholder="Last name" #lname="ngModel" required >
+      <mat-error *ngIf="lname.invalid">Enter Valid Name*</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput ngModel name="email" type="email" placeholder="Email ID" #email="ngModel" required email>
+      <mat-error *ngIf="email.invalid">Enter Valid Email Address*</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput name="password" ngModel type="password" placeholder="Password" #password="ngModel" required>
+      <mat-error *ngIf="password.invalid">Please Enter Valid Password*</mat-error>
+    </mat-form-field>
+    <button id="submit" mat-raised-button color="accent" type="submit">Create New User</button>
+  </form>
+</mat-card>
