@@ -70,14 +70,24 @@ router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) 
 });
 
 router.get("", (req, res, next) => {
-  const posts = [];
-  Post.find().then(documents => {
-    res.status(200).json({
-      message: 'Successfully fetched from Server',
-      posts: documents
+  const pageSize = +req.query.pageSize;
+  const currPage = +req.query.currPage;
+  const postQuery = Post.find();
+  let fetchedPosts;
+  if (pageSize && currPage) {
+    postQuery.skip(pageSize * (currPage - 1)).limit(pageSize);
+  }
+  postQuery.then(documents => {
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then( count => {
+      res.status(200).json({
+        message: 'Successfully fetched from Server',
+        posts: fetchedPosts,
+        totalPosts: count
+      });
     });
-  });
-
 });
 
 router.get('/:id', (req, res, next) =>{
