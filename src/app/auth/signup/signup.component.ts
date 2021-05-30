@@ -18,6 +18,7 @@ export class SignupComponent {
     if(form.invalid) {
       return;
     }
+    this.isLoading=true;
     console.log(form);
     const user: User = {
       firstName: form.value.FirstName,
