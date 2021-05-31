@@ -8,7 +8,8 @@ const userRoutes = require("./routes/user")
 
 const app = express();
 
-mongoose.connect("mongodb+srv://ashwin:GBQORbI9ARJBEp1u@cluster0.kekn1.mongodb.net/MEAN-Project?retryWrites=true&w=majority", {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect("mongodb+srv://ashwin:GBQORbI9ARJBEp1u@cluster0.kekn1.mongodb.net/MEAN-Project?retryWrites=true&w=majority",
+  {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
 .then(() => {
   console.log('Connected to Database!');
 })
