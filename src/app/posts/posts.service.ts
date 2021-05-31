@@ -17,13 +17,14 @@ export class PostService {
     const queryparams = `?pageSize=${postsPerPage}&currPage=${currPage}`;
     this.http.get<{message: string, posts: any, totalPosts: number}>('http://localhost:3000/api/posts' + queryparams)
       .pipe(map((postData) => {
-        console.log(postData);
+        console.log(postData.posts);
         return {posts: postData.posts.map(post => {
           return {
           title: post.title,
           content: post.content,
           id: post._id,
-          imagePath: post.imagePath
+          imagePath: post.imagePath,
+          creatorID: post.createID
           };
         }),
         postsCount: postData.totalPosts
@@ -37,7 +38,7 @@ export class PostService {
   }
 
   getPost(id: string) {
-    return this.http.get<{_id: string, title: string, content: string, imagePath: string}>("http://localhost:3000/api/posts/" + id);
+    return this.http.get<{_id: string, title: string, content: string, imagePath: string, creatorID: string}>("http://localhost:3000/api/posts/" + id);
   }
 
   updatePost(id: string, title: string, content: string, image: any) {

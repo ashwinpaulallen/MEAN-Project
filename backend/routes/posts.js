@@ -36,10 +36,11 @@ router.post("", checkAuth, multer({storage: storage}).single("image"), (req, res
   const posts = new Post({
     title: req.body.title,
     content: req.body.content,
-    imagePath: url + '/image/' + req.file.filename
+    imagePath: url + '/image/' + req.file.filename,
+    createID: req.userDetails.id
   });
+
   posts.save().then(result => {
-    console.log(result);
     res.status(201).json({
       message: 'Post Added Successfully!!!',
       post: {
@@ -61,12 +62,17 @@ router.put('/:id', checkAuth, multer({storage: storage}).single("image"), (req, 
     _id: req.body.id,
     title: req.body.title,
     content: req.body.content,
-    imagePath: imagePath
+    imagePath: imagePath,
+    createID: req.userDetails.id
   });
 
-  Post.updateOne({_id: req.params.id}, post).then((result) => {
+  Post.updateOne({_id: req.params.id, createID: req.userDetails.id}, post).then((result) => {
     console.log(result);
-    res.status(200).json({message: "Update Successful!"});
+    if (result.nModified > 0) {
+      res.status(200).json({message: "Update Successful!"});
+    } else {
+      res.status(401).json({message: "UnAuthorized to Edit Post!!"});
+    }
   });
 });
 
@@ -102,9 +108,13 @@ router.get('/:id', (req, res, next) =>{
 });
 
 router.delete('/:id', checkAuth, (req, res, next) =>{
-  Post.deleteOne({_id: req.params.id}).then(result => {
+  Post.deleteOne({_id: req.params.id, createID: req.userDetails.id}).then(result => {
     console.log(result);
-    res.status(200).json({ message: 'Successfully Deleted the Post'});
+    if (result.n > 0) {
+      res.status(200).json({ message: 'Successfully Deleted the Post!'});
+    } else {
+      res.status(401).json({message: "UnAuthorized to Delete Post!!"});
+    }
   });
 });
 
